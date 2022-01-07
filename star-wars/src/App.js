@@ -1,52 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import MoviesList from "./components/MoviesList";
+import AddMovie from "./components/AddMovie";
 import "./App.css";
 
 function App() {
 	const [movies, setMovies] = useState([]);
-	const [isLoading, setisLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
 
-	function fetchMoviesHandler() {
-		setisLoading(true);
-    setError(null)
-		fetch("https://swapi.dev/api/films/")
-			.then((response) => {
-        if (!response.ok) {
-          throw new Error('Something went wrong please try again')
-        }
-				return response.json();
-			})
-			.then((data) => {
-				const transformMovies = data.results.map((movieData) => {
-					return {
-						id: movieData.episode_id,
-						title: movieData.title,
-						openingText: movieData.opening_crawl,
-						releaseDate: movieData.release_date,
-					};
+	const fetchMoviesHandler = useCallback(async () => {
+		setIsLoading(true);
+		setError(null);
+		try {
+			const response = await fetch(
+				"https://react-http-9c241-default-rtdb.europe-west1.firebasedatabase.app/movies.json"
+			);
+
+			const data = await response.json();
+
+			const loadedMovies = [];
+
+			for (const key in data) {
+				loadedMovies.push({
+					id: key,
+					title: data[key].title,
+					openingText: data[key].openingText,
+					releaseDate: data[key].releaseDate,
 				});
-				setMovies(transformMovies);
-			}).catch((error) => {
-        setError(error.message)
-      });
-      setisLoading(false);
+			}
+
+			console.log(loadedMovies);
+			setMovies(loadedMovies);
+		} catch (error) {
+			setError(error.message);
+		}
+		setIsLoading(false);
+	}, []);
+
+	useEffect(() => {
+		fetchMoviesHandler();
+	}, [fetchMoviesHandler]);
+
+	function addMovieHandler(movie) {
+		fetch(
+			"https://react-http-9c241-default-rtdb.europe-west1.firebasedatabase.app/movies.json",
+			{
+				method: "POST",
+				body: JSON.stringify(movie),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
+	}
+
+	let content = <p>Found no movies.</p>;
+
+	if (movies.length > 0) {
+		content = <MoviesList movies={movies} />;
+	}
+
+	if (error) {
+		content = <p>{error}</p>;
+	}
+
+	if (isLoading) {
+		content = <p>Loading...</p>;
 	}
 
 	return (
 		<React.Fragment>
 			<section>
-				<button onClick={fetchMoviesHandler}>Fetch Movies</button>
+				<AddMovie onAddMovie={addMovieHandler} />
 			</section>
 			<section>
-				{isLoading && movies.length > 0 && (
-					<p>Movies are loading wait a bit...</p>
-				)}
-				{!isLoading && movies.length === 0 && <p>No movies found</p>}
-				{!isLoading && <MoviesList movies={movies} />}
-          {!isLoading && error && <p>{error}</p>}
+				<button onClick={fetchMoviesHandler}>Fetch Movies</button>
 			</section>
+			<section>{content}</section>
 		</React.Fragment>
 	);
 }
