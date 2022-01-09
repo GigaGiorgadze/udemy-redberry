@@ -7,7 +7,6 @@ const Auth = () => {
 	const emailRef = useRef("");
 	const passwordRef = useRef("");
 	const dispatch = useDispatch();
-	const isAuth = useSelector((state) => state.auth.isAuthed);
 
 	const loginHandler = (e) => {
 		e.preventDefault();
@@ -22,25 +21,21 @@ const Auth = () => {
 	};
 
 	return (
-		<>
-			{!isAuth && (
-				<main className={classes.auth}>
-					<section>
-						<form onSubmit={loginHandler}>
-							<div className={classes.control}>
-								<label htmlFor="email">Email</label>
-								<input ref={emailRef} type="email" id="email" />
-							</div>
-							<div className={classes.control}>
-								<label htmlFor="password">Password</label>
-								<input ref={passwordRef} type="password" id="password" />
-							</div>
-							<button>Login</button>
-						</form>
-					</section>
-				</main>
-			)}
-		</>
+		<main className={classes.auth}>
+			<section>
+				<form onSubmit={loginHandler}>
+					<div className={classes.control}>
+						<label htmlFor="email">Email</label>
+						<input ref={emailRef} type="email" id="email" />
+					</div>
+					<div className={classes.control}>
+						<label htmlFor="password">Password</label>
+						<input ref={passwordRef} type="password" id="password" />
+					</div>
+					<button>Login</button>
+				</form>
+			</section>
+		</main>
 	);
 };
 
