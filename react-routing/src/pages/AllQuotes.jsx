@@ -1,7 +1,7 @@
 import React from "react";
 import QuoteList from "../components/quotes/QuoteList";
 
-const DUMMY_QUOTES = [
+export const DUMMY_QUOTES = [
 	{ id: "q1", author: "Giga", text: "Laravel is a best framework" },
 	{ id: "q2", author: "Giga", text: "bless Tyron Otwell" },
 	{ id: "q3", author: "Giga", text: "Ubuntu sucks ass" },
