@@ -9,7 +9,9 @@ function QuoteDetails() {
 
 	const quote = DUMMY_QUOTES.find((quote) => quote.id === params.quoteId);
 
-	console.log(quote);
+	if (!quote) {
+		return <p>no quote found</p>;
+	}
 
 	return (
 		<>
