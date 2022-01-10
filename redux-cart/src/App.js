@@ -4,7 +4,7 @@ import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
 import Notification from "./components/UI/Notification";
-import { sendCartdata } from "./store/card-slice";
+import { fetchCartData, sendCartdata } from "./store/cart-actions";
 
 let isInitial = true;
 
@@ -16,11 +16,14 @@ function App() {
 
 	useEffect(() => {
 		if (isInitial) {
+			dispatch(fetchCartData());
 			isInitial = false;
 			return;
 		}
 
-		dispatch(sendCartdata(cart));
+		if (cart.changed) {
+			dispatch(sendCartdata(cart));
+		}
 	}, [cart, dispatch]);
 
 	return (
