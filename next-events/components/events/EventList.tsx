@@ -1,5 +1,7 @@
 import Link from "next/link";
 import React from "react";
+import Button from "../UI/Button";
+import classes from "./EventItem.module.css";
 
 const EventList: React.FC<{
 	items: {
@@ -15,14 +17,14 @@ const EventList: React.FC<{
 	const { items } = props;
 
 	return (
-		<div>
+		<ul className={classes.list}>
 			{items.map((item) => (
-				<li key={item.id}>
-					<img src={`/${item.image}`} />
-					<div>
-						<div>
+				<li className={classes.item} key={item.id}>
+					<img className={classes.icon} src={`/${item.image}`} />
+					<div className={classes.content}>
+						<div className={classes.summery}>
 							<h2>{item.title}</h2>
-							<div>
+							<div className={classes.data}>
 								<time>
 									{new Date(item.date).toLocaleDateString("en-US", {
 										day: "numeric",
@@ -31,17 +33,17 @@ const EventList: React.FC<{
 									})}
 								</time>
 							</div>
-							<div>
+							<div className={classes.address}>
 								<address>{item.location.replace(", ", "\n")}</address>
 							</div>
 						</div>
-						<div>
-							<Link href={`/events/${item.id}`}>Path</Link>
+						<div className={classes.actions}>
+							<Button link={`/events/${item.id}`}>Explore event</Button>
 						</div>
 					</div>
 				</li>
 			))}
-		</div>
+		</ul>
 	);
 };
 
