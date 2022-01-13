@@ -1,11 +1,19 @@
 import Link from "next/link";
 import classes from "./Button.module.css";
 
-const Button: React.FC<{ link: string }> = (props) => {
+const Button: React.FC<{ link: string; onClick: () => {} }> = (props) => {
+	if (props.link) {
+		return (
+			<Link href={props.link}>
+				<a className={classes.btn}>{props.children}</a>
+			</Link>
+		);
+	}
+
 	return (
-		<Link href={props.link}>
-			<a className={classes.btn}>{props.children}</a>
-		</Link>
+		<button className={classes.btn} onClick={props.onClick}>
+			{props.children}
+		</button>
 	);
 };
 
