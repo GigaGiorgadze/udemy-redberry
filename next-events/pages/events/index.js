@@ -14,7 +14,6 @@ function AllEventsPage() {
     
     router.push(fullPath);
   }
-
   return (
     <Fragment>
       <EventsSearch onSearch={findEventsHandler} />
