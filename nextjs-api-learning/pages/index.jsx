@@ -1,8 +1,9 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function HomePage() {
 	const emailRef = useRef();
 	const feedbackRef = useRef();
+	const [feedbacks, setFeedbacks] = useState([]);
 
 	function submitFormHandler(e) {
 		e.preventDefault();
@@ -19,9 +20,14 @@ function HomePage() {
 			.then((data) => console.log(data));
 	}
 
+	useEffect(() => {
+		fetch("/api/feedback")
+			.then((res) => res.json())
+			.then((data) => setFeedbacks(data.body));
+	}, []);
+
 	return (
 		<div>
-			<h1>The Home Page</h1>
 			<form onSubmit={submitFormHandler}>
 				<div>
 					<label htmlFor="email">Your email address</label>
@@ -38,6 +44,12 @@ function HomePage() {
 				</div>
 				<button>submit</button>
 			</form>
+      {feedbacks.length > 0 && (<ul>
+        {feedbacks.map(feedback => <li>
+          <p>{feedback.text}</p>
+          <i>By {feedback.email}</i>
+        </li>)}
+      </ul>)}
 		</div>
 	);
 }

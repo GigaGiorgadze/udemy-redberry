@@ -22,7 +22,11 @@ function handler(req, res) {
 			.status(201)
 			.json({ message: "feedback has been added", feedback: newFeedback });
 	} else {
-		res.status(200).json({ message: "This works?, hope so" });
+		const filepath = path.join(process.cwd(), "data", "feedback.json");
+		const data = fs.readFileSync(filepath);
+		res
+			.status(200)
+			.json({ message: "feedbacks loaded", body: JSON.parse(data) });
 	}
 }
 
